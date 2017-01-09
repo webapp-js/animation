@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+	<meta name="format-detection" content="telephone=no, email=no">
+	<meta name="x5-orientation" content="portrait">
+	<meta name="screen-orientation" content="portrait">
+	<meta name="robots" content="index,follow">
+	<meta name="keywords" content="your keywords">
+	<meta name="description" content="your description">
+	<meta name="author" content="rhine@rhine.me">
+	<title>test animation - webapp</title>
+	<link rel="stylesheet" href="./css/animate.css">
+	<style>
+		body {
+			font-family: "Myriad Set Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+		.rect {
+			margin: 0 auto;
+			width: 100px;
+			height: 100px;
+			background: #00b7ee;
+			border: 1px solid #fff;
+		}
+		.title, .log {
+			color: #000;
+			text-align: center;
+			font-weight: bold;
+			margin: 5px 0 15px 0;
+		}
+		.title {
+			margin-bottom: 0px;
+		}
+	</style>
+</head>
+<body>
+
+<div id="test-1">
+	<div class="rect"></div>
+	<div class="log">&nbsp;</div>
+</div>
+<div id="test-2">
+	<div class="rect"></div>
+	<div class="log">&nbsp;</div>
+</div>
+<div id="test-3">
+	<div class="rect animated flash infinite"></div>
+	<div class="title">cfg without animation</div>
+	<div class="log">&nbsp;</div>
+</div>
+<div id="test-4">
+	<div class="rect animated"></div>
+	<div class="title">animation list</div>
+</div>
+
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="../src/animation.js"></script>
+<script>
+	$(function () {
+		(function () {
+			Ani.add($('#test-1 .rect'), {animation: 'swing 1s 2', onStart: __start, onEnd: __end});
+
+			function __start() {
+				$('#test-1 .log').text('start');
+			}
+			function __end() {
+				$('#test-1 .log').text('end');
+			}
+		})();
+
+		(function () {
+			Ani.add($('#test-2 .rect'), {animation: 'shake 1s 5', onStart: __start, onEnd: __end, onLoop: __loop});
+
+			var count = 0;
+
+			function __start() {
+				$('#test-2 .log').text('start');
+			}
+			function __end() {
+				$('#test-2 .log').text('end');
+			}
+			function __loop() {
+				$('#test-2 .log').text('loop: ' + ++count);
+			}
+		})();
+
+		(function () {
+			Ani.add($('#test-3 .rect'), {onStart: __start, onEnd: __end, onLoop: __loop});
+
+			var count = 0;
+
+			function __start() {
+				$('#test-3 .log').text('start');
+			}
+			function __end() {
+				$('#test-3 .log').text('end');
+			}
+			function __loop() {
+				$('#test-3 .log').text('loop: ' + ++count);
+			}
+		})();
+
+		(function () {
+			var list = ['swing', 'shake', 'flash', 'jello'];
+			var $rect = $('#test-4 .rect').addClass(list[0]);
+
+			for (var i=0; i<list.length-1; ++i) {
+				Ani.next($rect, function () {
+					this.removeClass(list.shift()).addClass(list[0]);
+				});
+			}
+			Ani.start();
+		})();
+	});
+</script>
+
+</body>
+</html>
